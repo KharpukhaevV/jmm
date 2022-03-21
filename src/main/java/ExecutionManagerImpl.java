@@ -3,21 +3,17 @@ import java.util.concurrent.*;
 public class ExecutionManagerImpl implements ExecutionManager {
     @Override
     public Context execute(Runnable callback, Runnable... tasks) {
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-        Semaphore semaphore = new Semaphore(3);
-        for (Runnable task : tasks) {
-            try {
-//                semaphore.acquire();
-                executor.execute(task);
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
+        Semaphore semaphore = new Semaphore(1);
+        try {
+            for (Runnable task : tasks) {
                 Thread.sleep(100);
-                System.out.println("The stream fell asleep for 2 seconds");
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                executor.execute(task);
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-//        semaphore.release();
-        executor.execute(callback);
-        System.out.println("Callback");
+        callback.run();
         return new ContextImpl(executor, tasks.length);
     }
 }

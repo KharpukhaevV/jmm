@@ -13,7 +13,7 @@ public class ContextImpl implements Context {
 
     @Override
     public int getCompletedTaskCount() {
-        return (int) executor.getCompletedTaskCount();
+        return (int) executor.getCompletedTaskCount() - 1;
     }
 
     @Override

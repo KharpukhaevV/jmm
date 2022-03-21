@@ -3,7 +3,6 @@ import java.util.concurrent.Callable;
 public class Task<T> {
     MyCallable<? extends T> callable;
     private T result;
-    Object object = new Object();
     public Task(Callable<? extends T> callable) {
         this.callable = (MyCallable<? extends T>) callable;
     }
@@ -13,8 +12,8 @@ public class Task<T> {
             return result;
         }
         else {
-            synchronized (object) {
-                if (result==null){
+            synchronized (this) {
+                if (result == null){
                     try {
                         result = callable.call();
                         System.out.println(result);
